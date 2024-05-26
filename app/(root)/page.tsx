@@ -1,14 +1,14 @@
 import { fetchAllPosts } from '@/actions/posts'
-import Editor from '@/components/main/editor'
-import Header from '@/components/main/header'
-import Post from '@/components/main/post'
+import Editor from '@/components/global/editor'
+import HeaderTab from '@/components/main/header-tab'
+import Post from '@/components/global/post'
 
 const Home = async () => {
   const posts = await fetchAllPosts()
 
   return (
     <div className="h-full">
-      <Header />
+      <HeaderTab />
       <Editor />
 
       {posts.map(item => <Post key={item.id} data={item} />)}

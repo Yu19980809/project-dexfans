@@ -1,4 +1,4 @@
-import { string, object } from 'zod'
+import { string, object, optional } from 'zod'
 
 export const LoginSchema = object({
   email: string()
@@ -36,3 +36,20 @@ export const ResetSchema = object({
     .max(16, 'New password must be less than 16 chacracters')
 })
 
+export const UpdateUserSchema = object({
+  name: optional(
+    string().min(1, 'Name is required')
+  ),
+  username: optional(
+    string().min(1, 'Username is required')
+  ),
+  bio: optional(
+    string().min(1, 'Bio is required')
+  ),
+  profileImage: optional(
+    string().min(1, 'Profle image is required')
+  ),
+  coverImage: optional(
+    string().min(1, 'Cover image is required')
+  )
+})

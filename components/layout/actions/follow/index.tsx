@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { User } from '@prisma/client'
 
+import { formatName } from '@/lib/utils'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import AvatarItem from '@/components/global/avatar'
 import { Button } from '@/components/ui/button'
@@ -28,8 +29,8 @@ const Follow = ({ users }: Props) => {
             <AvatarItem user={item}/>
 
             <div className="flex flex-col">
-              <span className="font-semibold">{item.name}</span>
-              <span className="text-xs text-muted-foreground">@{item.username}</span>
+              <span className="font-semibold">{item.username}</span>
+              <span className="text-xs text-muted-foreground">{formatName(item.name)}</span>
             </div>
           </Link>
 

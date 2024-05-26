@@ -18,8 +18,8 @@ const AvatarItem = ({ user }: Props) => {
 
   return (
     <Avatar onClick={() => router.push(`/users/${user.id}`)} className="cursor-pointer">
-      <AvatarImage src={user.avatar} alt="Avatar"/>
-      <AvatarFallback>{user.name?.charAt(0).toUpperCase() || 'DF'}</AvatarFallback>
+      <AvatarImage src={user?.avatar!} alt="Avatar"/>
+      <AvatarFallback>{user?.username?.charAt(0).toUpperCase() || 'DF'}</AvatarFallback>
     </Avatar>
   )
 }

@@ -10,11 +10,6 @@ export const SidebarLinks = [
     label: 'Notifications',
     href: '/notifications',
     icon: Bell
-  },
-  {
-    label: 'Profile',
-    href: '/users/:id',
-    icon: User
   }
 ]
 
