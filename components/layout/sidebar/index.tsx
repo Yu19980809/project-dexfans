@@ -37,7 +37,7 @@ const Sidebar = async ({ userId }: Props) => {
           </div>
         </div>
 
-        {/* <UserButton /> */}
+        <UserButton />
       </div>
     </div>
   )

@@ -12,7 +12,7 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: "DexFans",
   description: "Social media and online fans community.",
-  icons: { icon: './logo.jpg' }
+  icons: { icon: './logo.png' }
 }
 
 export default function RootLayout({

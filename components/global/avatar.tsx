@@ -16,8 +16,13 @@ type Props = {
 const AvatarItem = ({ user }: Props) => {
   const router = useRouter()
 
+  const onClick = (e: any) => {
+    e.stopPropagation()
+    router.push(`/users/${user.id}`)
+  }
+
   return (
-    <Avatar onClick={() => router.push(`/users/${user.id}`)} className="cursor-pointer">
+    <Avatar onClick={onClick} className="cursor-pointer">
       <AvatarImage src={user?.avatar!} alt="Avatar"/>
       <AvatarFallback>{user?.username?.charAt(0).toUpperCase() || 'DF'}</AvatarFallback>
     </Avatar>

@@ -1,7 +1,7 @@
 import { fetchAllPosts } from '@/actions/posts'
 import Editor from '@/components/global/editor'
+import PostList from '@/components/main/post-list'
 import HeaderTab from '@/components/main/header-tab'
-import Post from '@/components/global/post'
 
 const Home = async () => {
   const posts = await fetchAllPosts()
@@ -10,8 +10,7 @@ const Home = async () => {
     <div className="h-full">
       <HeaderTab />
       <Editor />
-
-      {posts.map(item => <Post key={item.id} data={item} />)}
+      <PostList posts={posts} />
     </div>
   )
 }

@@ -5,8 +5,9 @@ import { User } from '@prisma/client'
 import { signOut } from 'next-auth/react'
 import { GripHorizontal, LogOut } from 'lucide-react'
 
-import { useCurrentUser } from '@/hooks/use-current-user'
+import { formatName } from '@/lib/utils'
 import { userOptions } from '@/lib/constants'
+import { useCurrentUser } from '@/hooks/use-current-user'
 import AvatarItem from '@/components/global/avatar'
 import {
   DropdownMenu,
@@ -32,8 +33,8 @@ const UserButton = () => {
               <AvatarItem user={currentUser} />
 
               <div className="flex flex-col gap-y-1">
-                <span className="font-semibold">{currentUser?.name || currentUser?.username}</span>
-                <span className="text-xs text-muted-foreground">@{currentUser?.username}</span>
+                <span className="font-semibold">{currentUser?.username}</span>
+                <span className="text-xs text-muted-foreground">{formatName(currentUser?.name)}</span>
               </div>
             </div>
 

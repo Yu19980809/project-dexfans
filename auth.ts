@@ -35,7 +35,7 @@ export const {
 
       return true
     },
-    session: ({ session, token }) => {
+    session: async ({ session, token }) => {
       if (!!token.sub && !!session.user) session.user.id = token.sub
 
       if (!!session.user) {
@@ -45,6 +45,7 @@ export const {
           username: token.username,
           email: token.email,
           avatar: token.avatar,
+          followingIds: token.followingIds,
           isOAuth: token.isOAuth
         }
 
@@ -61,12 +62,13 @@ export const {
       if (!existingUser) return token
 
       const existingAccount = await getAccountByUserId(existingUser.id)
-      const { name, username, email, avatar } = existingUser
+      const { name, username, email, avatar, followingIds } = existingUser
 
       token.name = name
       token.email = email
       token.avatar = avatar
       token.username = username
+      token.followingIds = followingIds
       token.isOAuth = !!existingAccount
 
       return token

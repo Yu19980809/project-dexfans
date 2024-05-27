@@ -3,14 +3,21 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { formatDistance } from 'date-fns'
-import { AiFillHeart, AiOutlineHeart, AiOutlineMessage } from 'react-icons/ai'
+import { CldImage  } from 'next-cloudinary'
+import { CirclePlay } from 'lucide-react'
+import toast from 'react-hot-toast'
+import {
+  AiFillHeart,
+  AiOutlineHeart,
+  AiOutlineMessage
+} from 'react-icons/ai'
 
 import { cn, formatName } from '@/lib/utils'
 import { PostWithAllInfo, PostWithInfo } from '@/lib/types'
-import AvatarItem from '@/components/global/avatar'
-import { fetchPostInfo, likePost, unlikePost } from '@/actions/posts'
 import { useCurrentUser } from '@/hooks/use-current-user'
-import toast from 'react-hot-toast'
+import { likePost, unlikePost } from '@/actions/posts'
+import AvatarItem from '@/components/global/avatar'
+import Mask from './mask'
 
 type Props = {
   data: PostWithInfo | PostWithAllInfo
@@ -20,12 +27,19 @@ const Post = ({ data }: Props) => {
   const router = useRouter()
   const currentUser = useCurrentUser()
 
+  const [canView, setCanView] = useState<boolean>(false)
   const [isLiked, setIsLiked] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isAutoPlay, setIsAutoPlay] = useState<boolean>(false)
+  const [showControls, setShowControls] = useState<boolean>(false)
 
   useEffect(() => {
     const isLiked = data.likedIds.includes(currentUser?.id!)
     setIsLiked(isLiked)
+
+    // @ts-ignore
+    const canView = currentUser?.followingIds.includes(data.creatorId) || currentUser?.id === data.creatorId
+    setCanView(canView)
   }, [currentUser?.id!, data.id])
 
   const onLike = (e: any) => {
@@ -54,10 +68,25 @@ const Post = ({ data }: Props) => {
     }
   }
 
+  const onMouseEnter = () => {
+    setShowControls(true)
+    setIsAutoPlay(true)
+  }
+
+  const onMouseLeave = () => {
+    setShowControls(false)
+    setIsAutoPlay(false)
+  }
+
+  const onClickUser = (e: any) => {
+    e.stopPropagation()
+    router.push(`/users/${data.creatorId}`)
+  }
+
   return (
     <div
       onClick={() => router.push(`/posts/${data.id}`)}
-      className="p-4 border-b cursor-pointer transition hover:bg-secondary"
+      className="p-4 border-b cursor-pointer transition hover:bg-secondary/50"
     >
       <div className="flex gap-x-3">
         <AvatarItem user={data.creator} />
@@ -66,14 +95,14 @@ const Post = ({ data }: Props) => {
           <div className="flex justify-between items-center w-full">
             <div className="flex items-center gap-x-2">
               <p
-                onClick={() => router.push(`/users/${data.creatorId}`)}
+                onClick={onClickUser}
                 className="font-semibold text-white cursor-pointer hover:underline"
               >
                 {data.creator.username}
               </p>
 
               <span
-                onClick={() => router.push(`/users/${data.creatorId}`)}
+                onClick={onClickUser}
                 className="hidden md:block text-neutral-500 cursor-pointer hover:underline"
               >
                 {formatName(data.creator.name)}
@@ -85,8 +114,44 @@ const Post = ({ data }: Props) => {
             </span>
           </div>
 
-          <div>
-            {data.content}
+          <div className="flex flex-col gap-y-2">
+            <p>{data.content}</p>
+            
+            <div>
+              {!!data.image && (
+                <div className="relative">
+                  <CldImage
+                    src={data.image}
+                    alt="Image"
+                    width={200}
+                    height={300}
+                    className="w-full rounded-md object-cover"
+                  />
+
+                  {!canView && <Mask userId={data.creatorId} />}
+                </div>
+              )}
+
+              {!!data.video && (
+                <div className="group relative flex justify-center items-center">
+                  <video
+                    onClick={e => e.stopPropagation()}
+                    onMouseEnter={onMouseEnter}
+                    onMouseLeave={onMouseLeave}
+                    src={data.video}
+                    controls={showControls}
+                    autoPlay={isAutoPlay}
+                    className="rounded-md"
+                  />
+
+                  <div className="absolute block group-hover:hidden">
+                    <CirclePlay className="w-10 h-10 text-white opacity-70" />
+                  </div>
+
+                  {!canView && <Mask userId={data.creatorId} />}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="flex items-center gap-10">

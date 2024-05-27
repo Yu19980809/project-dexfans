@@ -14,16 +14,16 @@ const Item = ({ label, href, icon: Icon }: Props) => {
         href={href}
         className="flex lg:hidden justify-center items-center w-14 h-14 p-4 rounded-full cursor-pointer hover:bg-secondary"
       >
-        <Icon size={28} />
+        <Icon size={24} />
       </Link>
 
       <Link
         href={href}
         className="hidden lg:flex items-center gap-x-4 w-full p-4 rounded-full cursor-pointer hover:bg-secondary"
       >
-        <Icon size={28} />
+        <Icon size={24} />
 
-        <p className="text-xl">
+        <p className="text-lg">
           {label}
         </p>
       </Link>

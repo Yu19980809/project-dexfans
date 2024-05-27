@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { BiCalendar } from 'react-icons/bi'
 import toast from 'react-hot-toast'
 import { format } from 'date-fns'
@@ -17,6 +18,7 @@ type Props = {
 }
 
 const UserBio = ({ user }: Props) => {
+  const router = useRouter()
   const currentUser = useCurrentUser()
 
   const [modalOpen, setModalOpen] = useState<boolean>(false)
@@ -26,6 +28,8 @@ const UserBio = ({ user }: Props) => {
   const isSelf = currentUser?.id === user.id
 
   useEffect(() => {
+    if (!currentUser?.id) return
+
     const fetchData = async () => {
       const userInfo = await fetchUserInfo(currentUser?.id!)
       const isFollowed = userInfo.followingIds.includes(user.id)
@@ -43,6 +47,7 @@ const UserBio = ({ user }: Props) => {
         .then(res => {
           if (res.error) return toast.error(res.error)
           setIsFollowed(false)
+          router.refresh()
           toast.success('Unfollow success')
         })
         .catch(() => toast.error('Something went wrong'))
@@ -52,6 +57,7 @@ const UserBio = ({ user }: Props) => {
       .then(res => {
         if (res.error) return toast.error(res.error)
         setIsFollowed(true)
+        router.refresh()
         toast.success('Follow success')
       })
       .catch(() => toast.error('Something went wrong'))

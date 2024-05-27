@@ -5,16 +5,24 @@ import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { headerItems } from '@/lib/constants'
 import { ModeToggle } from '@/components/dark-mode/mode-toggle'
+import useTabType from '@/store/use-tab-type'
 
 const HeaderTab = () => {
+  const { setIsFollwing } = useTabType()
+
   const [activeIndex, setActiveIndex] = useState<number>(0)
+
+  const onClick = (index: number) => {
+    setActiveIndex(index)
+    setIsFollwing(index === 1)
+  }
 
   return (
     <div className="flex h-14 border-b">
       {headerItems.map((item, index) => (
         <div
           key={item.label}
-          onClick={() => setActiveIndex(index)}
+          onClick={() => onClick(index)}
           className="flex-1 flex flex-col justify-center items-center gap-y-2 h-full cursor-pointer hover:bg-secondary"
         >
           <div className="relative flex flex-col justify-center px-2 h-full">

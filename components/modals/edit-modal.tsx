@@ -152,6 +152,22 @@ const EditModal = ({
                         label="Upload profile image"
                         onChange={(base64: any) => form.setValue('profileImage', base64)}
                       />
+
+                      {/* <MediaUploader onUploadSuccess={result => field.onChange(result?.public_id)}>
+                        <div className="w-full p-4 rounded-md border-2 border-dotted text-center">
+                          {!field.value && <p>Upload profile image</p>}
+
+                          {!!field.value && (
+                            <CldImage
+                              src={field.value}
+                              alt="Profile image"
+                              width={200}
+                              height={200}
+                              className="w-full rounded-md object-cover"
+                            />
+                          )}
+                        </div>
+                      </MediaUploader> */}
                     </FormControl>
 
                     <FormMessage />

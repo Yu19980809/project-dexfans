@@ -11,11 +11,18 @@ export const getPostById =async (postId: string) => {
   return post
 }
 
-export const createPost = async (userId: string, value: string) => {
+export const createPost = async (
+  userId: string,
+  value: string,
+  image?: string,
+  video?: string
+) => {
   const newPost = await db.post.create({
     data: {
       content: value,
-      creatorId: userId
+      creatorId: userId,
+      image,
+      video
     }
   })
 
