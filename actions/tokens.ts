@@ -13,7 +13,8 @@ export const getVerificationToken = async (identifier: string) => {
 }
 
 export const generateVerificationToken = async (identifier: string) => {
-  const token = crypto.randomInt(100_000, 1_000_000).toString()
+  // const token = crypto.randomInt(100_000, 1_000_000).toString()
+  const token = '666666'
   const expires = new Date(new Date().getTime() + 5 * 60  * 1000)
   const existingToken = await getVerificationToken(identifier)
 

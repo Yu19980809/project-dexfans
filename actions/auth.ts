@@ -4,7 +4,6 @@ import bcrypt from 'bcryptjs'
 import { z } from 'zod'
 
 import db from '@/lib/db'
-import { DEFAULT_LOGIN_REDIRECT } from '@/lib/routes'
 import { LoginSchema, RegisterSchema } from '@/lib/schemas'
 import { getVerificationToken } from '@/actions/tokens'
 import { getUserByEmail } from '@/actions/users'
