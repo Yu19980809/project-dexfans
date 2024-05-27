@@ -83,7 +83,7 @@ const VerificationForm = () => {
             onChange={(value: string)  => setCode(value)}
           >
             <InputOTPGroup>
-              {[...Array(6)].map((_, index) => <InputOTPSlot index={index} />)}
+              {[...Array(6)].map((_, index) => <InputOTPSlot key={index} index={index} />)}
             </InputOTPGroup>
           </InputOTP>
 
@@ -93,7 +93,7 @@ const VerificationForm = () => {
             disabled={isLoading || isResend}
             className="text-xs"
           >
-            Didn't receive a code? Resend
+            Didn&apos;t receive a code? Resend
           </Button>
         </div>
 

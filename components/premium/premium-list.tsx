@@ -50,7 +50,7 @@ const PremiumList = ({ isAnnual }: Props) => {
 
           <div className="flex flex-col gap-y-2">
             {item.items.map(label => (
-              <div className="flex items-center gap-x-2">
+              <div key={label} className="flex items-center gap-x-2">
                 <Check className="w-4 h-4" />
 
                 <span>{label}</span>

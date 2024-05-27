@@ -7,7 +7,7 @@ import { CldImage  } from 'next-cloudinary'
 import {
   CirclePlay,
   FileVideo,
-  Image,
+  ImageIcon,
   Smile,
   Trash2
 } from 'lucide-react'
@@ -145,7 +145,7 @@ const Editor = ({
       <div className="flex justify-between items-center pt-4">
         <div className="flex items-center gap-x-4 px-4">
           <MediaUploader onUploadSuccess={onUploadSuccess}>
-            <Image className="w-5 h-5 text-sky-500 cursor-pointer transition hover:scale-110" />
+            <ImageIcon className="w-5 h-5 text-sky-500 cursor-pointer transition hover:scale-110" />
           </MediaUploader>
 
           <MediaUploader isVideo onUploadSuccess={onUploadSuccess}>

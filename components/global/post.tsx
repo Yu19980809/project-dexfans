@@ -17,7 +17,7 @@ import { PostWithAllInfo, PostWithInfo } from '@/lib/types'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import { likePost, unlikePost } from '@/actions/posts'
 import AvatarItem from '@/components/global/avatar'
-import Mask from './mask'
+import Mask from '@/components/global/mask'
 
 type Props = {
   data: PostWithInfo | PostWithAllInfo
@@ -26,21 +26,24 @@ type Props = {
 const Post = ({ data }: Props) => {
   const router = useRouter()
   const currentUser = useCurrentUser()
+  const likeStatus = data.likedIds.includes(currentUser?.id!)
+  // @ts-ignore
+  const viewStatus = currentUser?.followingIds.includes(data.creatorId) || currentUser?.id === data.creatorId
 
-  const [canView, setCanView] = useState<boolean>(false)
-  const [isLiked, setIsLiked] = useState<boolean>(false)
+  const [canView, setCanView] = useState<boolean>(viewStatus)
+  const [isLiked, setIsLiked] = useState<boolean>(likeStatus)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isAutoPlay, setIsAutoPlay] = useState<boolean>(false)
   const [showControls, setShowControls] = useState<boolean>(false)
 
-  useEffect(() => {
-    const isLiked = data.likedIds.includes(currentUser?.id!)
-    setIsLiked(isLiked)
+  // useEffect(() => {
+  //   const isLiked = data.likedIds.includes(currentUser?.id!)
+  //   setIsLiked(isLiked)
 
-    // @ts-ignore
-    const canView = currentUser?.followingIds.includes(data.creatorId) || currentUser?.id === data.creatorId
-    setCanView(canView)
-  }, [currentUser?.id!, data.id])
+  //   // @ts-ignore
+  //   const canView = currentUser?.followingIds.includes(data.creatorId) || currentUser?.id === data.creatorId
+  //   setCanView(canView)
+  // }, [currentUser?.id!, data.id])
 
   const onLike = (e: any) => {
     e.stopPropagation()
