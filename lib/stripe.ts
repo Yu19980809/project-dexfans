@@ -8,6 +8,4 @@ const stripe = new Stripe(
   }
 )
 
-console.log('stripe', stripe)
-
 export default stripe

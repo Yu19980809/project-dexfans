@@ -99,20 +99,20 @@ const Post = ({ data }: Props) => {
             <div className="flex items-center gap-x-2">
               <p
                 onClick={onClickUser}
-                className="font-semibold text-white cursor-pointer hover:underline"
+                className="font-semibold cursor-pointer hover:underline"
               >
                 {data.creator.username}
               </p>
 
               <span
                 onClick={onClickUser}
-                className="hidden md:block text-neutral-500 cursor-pointer hover:underline"
+                className="hidden md:block text-muted-foreground cursor-pointer hover:underline"
               >
                 {formatName(data.creator.name)}
               </span>
             </div>
 
-            <span className="text-sm text-neutral-500">
+            <span className="text-sm text-muted-foreground">
               {formatDistance(data.createdAt, new Date(), { addSuffix: true })}
             </span>
           </div>
