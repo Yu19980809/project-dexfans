@@ -76,7 +76,7 @@ const PaymentModal = ({ item }: Props) => {
           <h1 className="text-xl">{item.label}</h1>
 
           <p>
-            <span className="font-bold text-4xl">${item.price}</span>
+            <span className="font-bold text-4xl">ICP {item.price}</span>
             <span>/month</span>
           </p>
 
