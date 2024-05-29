@@ -1,18 +1,11 @@
 'use client'
 
-import { premiumType } from '@/lib/constants'
 import { Check } from 'lucide-react'
-import { Button } from '../ui/button'
 
-type Props = {
-  isAnnual: boolean
-}
+import { premiumType } from '@/lib/constants'
+import PaymentModal from './payment-modal'
 
-const PremiumList = ({ isAnnual }: Props) => {
-  const onSubscribe = (item: any) => {
-    console.log('onSubscribe', item)
-  }
-
+const PremiumList = () => {
   return (
     <div className="flex items-center gap-x-6">
       {premiumType.map(item => (
@@ -23,30 +16,13 @@ const PremiumList = ({ isAnnual }: Props) => {
           <h1 className="text-xl">{item.label}</h1>
 
           <p>
-            <span className="font-bold text-4xl">${isAnnual ? item.annualAmount : item.monthlyAmount}</span>
+            <span className="font-bold text-4xl">${item.price}</span>
             <span>/month</span>
           </p>
 
-          <p className="flex items-center gap-x-4">
-            {isAnnual && (
-              <>
-                <span>Billed annually</span>
-                <span className="text-xs text-emerald-500">
-                  {/* @ts-ignore */}
-                  SAVE {Math.ceil((item.monthlyAmount - item.annualAmount) / item.monthlyAmount)}%
-                </span>
-              </>
-            )}
+          <p className="flex items-center gap-x-4">Billed monthly</p>
 
-            {!isAnnual && 'Billed monthly'}
-          </p>
-
-          <Button
-            onClick={() => onSubscribe(item)}
-            className="rounded-full"
-          >
-            Subscribe
-          </Button>
+          <PaymentModal item={item} />
 
           <div className="flex flex-col gap-y-2">
             {item.items.map(label => (

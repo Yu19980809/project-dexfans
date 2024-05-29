@@ -4,8 +4,8 @@ import { useState } from 'react'
 
 import { cn } from '@/lib/utils'
 import { headerItems } from '@/lib/constants'
-import { ModeToggle } from '@/components/dark-mode/mode-toggle'
 import useTabType from '@/store/use-tab-type'
+import { ModeToggle } from '@/components/dark-mode/mode-toggle'
 
 const HeaderTab = () => {
   const { setIsFollwing } = useTabType()

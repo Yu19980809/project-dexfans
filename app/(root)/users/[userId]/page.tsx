@@ -6,6 +6,7 @@ import Header from '@/components/global/header'
 import UserHero from '@/components/user/hero'
 import UserBio from '@/components/user/bio'
 import Post from '@/components/global/post'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 type Props = {
   params: {
@@ -26,13 +27,15 @@ const UserPage = async ({ params }: Props) => {
       )}
 
       {!!user && (
-        <>
+        <div className="relative">
           <Header label={user.name || 'DF'} />
           <UserHero user={user} />
           <UserBio user={user} />
 
-          {posts.map(item => <Post key={item.id} data={item} />)}
-        </>
+          <ScrollArea>
+            {posts.map(item => <Post key={item.id} data={item} />)}
+          </ScrollArea>
+        </div>
       )}
     </>
   )

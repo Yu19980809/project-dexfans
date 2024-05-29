@@ -41,13 +41,13 @@ const PostList = ({ posts }: Props) => {
   return (
     <>
       {isLoading && (
-        <div className="flex justify-center items-center h-full">
+        <div className="flex justify-center items-center h-[calc(100vh-56px)]">
           <Loader className="w-8 h-8" />
         </div>
       )}
 
       {(!data || data.length === 0) && !isLoading && (
-        <div className="flex justify-center items-center h-full">
+        <div className="flex justify-center items-center h-[calc(100vh-56px)]">
           <span className="text-muted-foreground">No posts</span>
         </div>
       )}

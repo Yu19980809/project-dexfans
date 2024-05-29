@@ -54,8 +54,8 @@ export const premiumTab = [
 export const premiumType = [
   {
     label: 'Silver',
-    annualAmount: '14.99',
-    monthlyAmount: '19.99',
+    // annualAmount: '14.99',
+    price: 19.99,
     items: [
       'Advertising blocker',
       'Interaction unlimited',
@@ -64,8 +64,8 @@ export const premiumType = [
   },
   {
     label: 'Gold',
-    annualAmount: '22.99',
-    monthlyAmount: '29.99',
+    // annualAmount: '22.99',
+    price: 29.99,
     items: [
       'Advertising blocker',
       'Interaction unlimited',
@@ -75,8 +75,8 @@ export const premiumType = [
   },
   {
     label: 'Platinum',
-    annualAmount: '40.99',
-    monthlyAmount: '49.99',
+    // annualAmount: '40.99',
+    price: 49.99,
     items: [
       'Advertising blocker',
       'Interaction unlimited',

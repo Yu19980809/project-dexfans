@@ -3,6 +3,8 @@
 import { z } from 'zod'
 
 import db from '@/lib/db'
+import stripe from '@/lib/stripe'
+import { Premium } from '@/lib/types'
 import { UpdateUserSchema } from '@/lib/schemas'
 
 export const getUserByEmail = async (email: string) => {
@@ -127,4 +129,53 @@ export const unfollow = async (userId: string, currentUserId: string) => {
   })
 
   return { success: true }
+}
+
+export const purchase = async (userId: string, premium: Premium) => {
+  console.log('purchase item', premium)
+  const existingPurchase = await db.purchase.findUnique({
+    where: { userId }
+  })
+
+  const defaultUrl = process.env.NEXT_PUBLIC_APP_URL
+  const existingUser = await getUserById(userId)
+
+  if (existingPurchase && existingPurchase.stripeCustomerId) {
+    const stripeSession = await stripe.billingPortal.sessions.create({
+      customer: existingPurchase.stripeCustomerId,
+      return_url: defaultUrl
+    })
+
+    return { success: true, data: stripeSession.url }
+  }
+
+  const stripeSession = await stripe.checkout.sessions.create({
+    success_url: defaultUrl,
+    cancel_url: `${defaultUrl}/premium`,
+    payment_method_types: ['card'],
+    mode: 'subscription',
+    billing_address_collection: 'auto',
+    customer_email: existingUser?.email,
+    line_items: [
+      {
+        price_data: {
+          currency: 'USD',
+          product_data: {
+            name: premium.label,
+            description: premium.label
+          },
+          unit_amount_decimal: (premium.price * 100).toFixed(2),
+          recurring: {
+            interval: 'month'
+          }
+        },
+        quantity: 1
+      }
+    ],
+    metadata: {
+      userId
+    }
+  })
+
+  return { success: true, data: stripeSession.url }
 }
