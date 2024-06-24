@@ -23,7 +23,7 @@ const UserBio = ({ user }: Props) => {
 
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isFollowed, setIsFollowed] = useState<boolean>(false)
+  const [isSubscribed, setIsSubscribed] = useState<boolean>(false)
 
   const isSelf = currentUser?.id === user.id
 
@@ -32,21 +32,21 @@ const UserBio = ({ user }: Props) => {
 
     const fetchData = async () => {
       const userInfo = await fetchUserInfo(currentUser?.id!)
-      const isFollowed = userInfo.followingIds.includes(user.id)
-      setIsFollowed(isFollowed)
+      const isSubscribed = userInfo.subscribingIds.includes(user.id)
+      setIsSubscribed(isSubscribed)
     }
 
     fetchData()
   }, [currentUser?.id, user.id])
 
-  const onFollow = async () => {
+  const onSubscribe = async () => {
     setIsLoading(true)
 
-    if (isFollowed) {
+    if (isSubscribed) {
       unfollow(user.id, currentUser?.id!)
         .then(res => {
           if (res.error) return toast.error(res.error)
-          setIsFollowed(false)
+          setIsSubscribed(false)
           router.refresh()
           toast.success('Unfollow success')
         })
@@ -56,7 +56,7 @@ const UserBio = ({ user }: Props) => {
       follow(user.id, currentUser?.id!)
       .then(res => {
         if (res.error) return toast.error(res.error)
-        setIsFollowed(true)
+        setIsSubscribed(true)
         router.refresh()
         toast.success('Follow success')
       })
@@ -82,11 +82,11 @@ const UserBio = ({ user }: Props) => {
           
           {!isSelf && (
             <Button
-              onClick={onFollow}
+              onClick={onSubscribe}
               disabled={isLoading}
               className="rounded-full"
             >
-              {isLoading ? <Loader /> : (isFollowed ? 'Unfollow' : 'Follow')}
+              {isLoading ? <Loader /> : (isSubscribed ? 'Unsubscribe' : 'Subscribe')}
             </Button>
           )}
         </div>
@@ -113,13 +113,13 @@ const UserBio = ({ user }: Props) => {
 
           <div className="flex items-center gap-x-6">
             <div className="flex items-center gap-x-1">
-              <p className="font-semibold">{user.followingIds.length}</p>
-              <p className="text-muted-foreground">Following</p>
+              <p className="font-semibold">{user.subscribingIds.length}</p>
+              <p className="text-muted-foreground">Subscribing</p>
             </div>
 
             <div className="flex items-center gap-x-1">
               <p className="font-semibold">{user.followersCount || 0}</p>
-              <p className="text-muted-foreground">Followers</p>
+              <p className="text-muted-foreground">Subscribers</p>
             </div>
           </div>
         </div>

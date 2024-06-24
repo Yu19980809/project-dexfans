@@ -1,6 +1,6 @@
 'use server'
 
-import db from '@/lib/db'
+import db, { PostType } from '@/lib/db'
 import { getUserById } from './users'
 
 export const getPostById =async (postId: string) => {
@@ -14,15 +14,21 @@ export const getPostById =async (postId: string) => {
 export const createPost = async (
   userId: string,
   value: string,
+  type: PostType,
   image?: string,
   video?: string
 ) => {
   const newPost = await db.post.create({
     data: {
       content: value,
-      creatorId: userId,
       image,
-      video
+      video,
+      type,
+      creator: {
+        connect: {
+          id: userId
+        }
+      }
     }
   })
 

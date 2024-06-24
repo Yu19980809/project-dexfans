@@ -42,7 +42,7 @@ export const fetchUserInfo = async (userId: string) => {
 
   const followersCount = await db.user.count({
     where: {
-      followingIds: {
+      subscribingIds: {
         has: existingUser.id
       }
     }
@@ -97,11 +97,11 @@ export const follow = async (userId: string, currentUserId: string) => {
 
   if (!existingUser || !currentUser) return { error: 'Invalid user id' }
 
-  let updatedFolowingIds = [...(currentUser?.followingIds || []), userId]
+  let updatedFolowingIds = [...(currentUser?.subscribingIds || []), userId]
 
   await db.user.update({
     where: { id: currentUserId },
-    data: { followingIds: updatedFolowingIds }
+    data: { subscribingIds: updatedFolowingIds }
   })
 
   return { success: true }
@@ -121,18 +121,18 @@ export const unfollow = async (userId: string, currentUserId: string) => {
   if (!existingUser || !currentUser) return { error: 'Invalid user id' }
 
 
-  let updatedFolowingIds = currentUser?.followingIds.filter(item => item !== userId)
+  let updatedFolowingIds = currentUser?.subscribingIds.filter(item => item !== userId)
 
   await db.user.update({
     where: { id: currentUserId },
-    data: { followingIds: updatedFolowingIds }
+    data: { subscribingIds: updatedFolowingIds }
   })
 
   return { success: true }
 }
 
 export const purchase = async (userId: string, premium: Premium) => {
-  console.log('purchase item', premium)
+  console.log('premium', premium)
   const existingPurchase = await db.purchase.findUnique({
     where: { userId }
   })
@@ -150,7 +150,7 @@ export const purchase = async (userId: string, premium: Premium) => {
   }
 
   const stripeSession = await stripe.checkout.sessions.create({
-    success_url: defaultUrl,
+    success_url: `${defaultUrl}?success=true`,
     cancel_url: `${defaultUrl}/premium`,
     payment_method_types: ['card'],
     mode: 'subscription',
@@ -173,9 +173,21 @@ export const purchase = async (userId: string, premium: Premium) => {
       }
     ],
     metadata: {
-      userId
+      premium: premium.value,
+      userId,
     }
   })
 
+  console.log('stripeSession', stripeSession)
+
   return { success: true, data: stripeSession.url }
+}
+
+export const getUserLatestedPurchase = async (userId: string) => {
+  const purchases = await db.purchase.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'desc' }
+  })
+
+  return purchases[0]
 }

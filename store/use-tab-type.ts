@@ -1,13 +1,13 @@
 import { create } from 'zustand'
 
 type Props = {
-  isFollowing: boolean
-  setIsFollwing: (status: boolean) => void
+  isSubscribing: boolean
+  setIsSubscribing: (status: boolean) => void
 }
 
 const useTabType = create<Props>(set => ({
-  isFollowing: false,
-  setIsFollwing: status => set({ isFollowing: status })
+  isSubscribing: false,
+  setIsSubscribing: status => set({ isSubscribing: status })
 }))
 
 export default useTabType

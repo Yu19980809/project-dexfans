@@ -12,8 +12,8 @@ type Props = {
 
 const Sidebar = async ({ userId }: Props) => {
   return (
-    <div className="col-span-1 h-full pr-4 md:pr-6">
-      <div className="flex flex-col justify-between items-center h-screen py-2">
+    // <div className="col-span-1 h-full pr-4 md:pr-6">
+      <div className="flex flex-col justify-between items-center lg:items-start w-[300px] h-screen py-2">
         <div className="space-y-2 lg:w-[230px]">
           <Logo />
 
@@ -39,7 +39,7 @@ const Sidebar = async ({ userId }: Props) => {
 
         <UserButton />
       </div>
-    </div>
+    // </div>
   )
 }
 

@@ -2,7 +2,7 @@ import Stripe from 'stripe'
 import { headers } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 
-import db from '@/lib/db'
+import db, { PremiumType } from '@/lib/db'
 import stripe from '@/lib/stripe'
 
 export async function POST(req: NextRequest) {
@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (event.type === 'checkout.session.completed') {
+    console.log('completed session data', session?.metadata)
     const subscription = await stripe.subscriptions.retrieve(
       session.subscription as string
     )
@@ -34,6 +35,7 @@ export async function POST(req: NextRequest) {
     await db.purchase.create({
       data: {
         userId: session?.metadata?.userId,
+        premium: session?.metadata?.premium as PremiumType,
         stripeSubscriptionId: subscription.id,
         stripeCustomerId: subscription.customer as string,
         stripePriceId: subscription.items.data[0].price.id,
@@ -45,6 +47,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (event.type === 'invoice.payment_succeeded') {
+    console.log('payment_succeeded')
     const subscription = await stripe.subscriptions.retrieve(
       session.subscription as string
     )

@@ -10,5 +10,6 @@ export const authRoutes = [
 ]
 
 export const apiAuthPrefix = '/api/auth'
+export const webhookPrefix = '/api/webhooks'
 
 export const DEFAULT_LOGIN_REDIRECT = '/'

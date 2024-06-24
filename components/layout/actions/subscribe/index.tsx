@@ -7,7 +7,7 @@ import { User } from '@prisma/client'
 import { toast } from 'react-hot-toast'
 
 import { formatName } from '@/lib/utils'
-import { fetchUserInfo, follow, unfollow } from '@/actions/users'
+import { follow, unfollow } from '@/actions/users'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import AvatarItem from '@/components/global/avatar'
 import { Button } from '@/components/ui/button'
@@ -17,34 +17,34 @@ type Props = {
   users: User[]
 }
 
-const Follow = ({ users }: Props) => {
+const Subscribe = ({ users }: Props) => {
   const router = useRouter()
   const currentUser = useCurrentUser()
 
   const [data, setData] = useState<User[]>(users) 
-  const [isFollowed, setIsFollowed] = useState<boolean>(false)
+  const [isSubscribed, setIsSubscribed] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  users = users.filter(item => item.id !== currentUser?.id)
+  users = users.filter(item => item.id !== currentUser?.id).slice(0, 3)
 
   useEffect(() => {
     // @ts-ignore
-    if (!currentUser?.id || !currentUser?.followingIds) return
+    if (!currentUser?.id || !currentUser?.subscribingIds) return
     if (!users || users.length === 0) return
     
     // @ts-ignore
-    const temp = users.filter(item => !currentUser.followingIds.includes(item.id))
+    const temp = users.filter(item => !currentUser.subscribingIds.includes(item.id))
     // setData(temp)
   }, [users, currentUser])
 
-  const onFollow = async (userId: string) => {
+  const onSubscribe = async (userId: string) => {
     setIsLoading(true)
 
-    if (isFollowed) {
+    if (isSubscribed) {
       unfollow(userId, currentUser?.id!)
         .then(res => {
           if (res.error) return toast.error(res.error)
-          setIsFollowed(false)
+          setIsSubscribed(false)
           router.refresh()
           toast.success('Unfollow success')
         })
@@ -54,7 +54,7 @@ const Follow = ({ users }: Props) => {
       follow(userId, currentUser?.id!)
       .then(res => {
         if (res.error) return toast.error(res.error)
-        setIsFollowed(true)
+        setIsSubscribed(true)
         router.refresh()
         toast.success('Follow success')
       })
@@ -65,7 +65,7 @@ const Follow = ({ users }: Props) => {
 
   return (
     <div className="flex flex-col gap-y-6 w-full p-4 border rounded-xl">
-      <span className="font-semibold">Who to follow</span>
+      <span className="font-semibold">Who to subscribe</span>
 
       {(!data || data.length === 0) && <p className="text-center text-muted-foreground">No results</p>}
 
@@ -81,12 +81,12 @@ const Follow = ({ users }: Props) => {
           </Link>
 
           <Button
-            onClick={() => onFollow(item.id)}
+            onClick={() => onSubscribe(item.id)}
             size="sm"
             disabled={isLoading}
             className="rounded-full"
           >
-            {isLoading ? <Loader /> : 'Follow'}
+            {isLoading ? <Loader /> : 'Subscribe'}
           </Button>
         </div>
       ))}
@@ -95,10 +95,10 @@ const Follow = ({ users }: Props) => {
         href="/follow"
         className="text-sm text-sky-500"
       >
-        Show more
+        Check all
       </Link>
     </div>
   )
 }
 
-export default Follow
+export default Subscribe

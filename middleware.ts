@@ -5,7 +5,8 @@ import {
   publicRoutes,
   authRoutes,
   apiAuthPrefix,
-  DEFAULT_LOGIN_REDIRECT
+  DEFAULT_LOGIN_REDIRECT,
+  webhookPrefix
 } from '@/lib/routes'
 
 const { auth: middleware } = NextAuth(authConfig)
@@ -16,10 +17,11 @@ export default middleware(req => {
   const isLoggedin = !!auth
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
+  const isWebhookRoute = nextUrl.pathname.startsWith(webhookPrefix)
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname)
   const isAuthRoute = authRoutes.includes(nextUrl.pathname)
 
-  if (isApiAuthRoute) return null
+  if (isApiAuthRoute || isWebhookRoute) return null
 
   if (isAuthRoute) {
     if (!isLoggedin) return null

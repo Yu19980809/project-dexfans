@@ -1,7 +1,8 @@
-import { Comment, Post, User } from '@prisma/client'
+import { Comment, Post, PremiumType, User } from '@prisma/client'
 
 export type Premium = {
   label: string
+  value: PremiumType
   price: number
   items: string[]
 }

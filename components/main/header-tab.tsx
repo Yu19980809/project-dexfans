@@ -8,17 +8,17 @@ import useTabType from '@/store/use-tab-type'
 import { ModeToggle } from '@/components/dark-mode/mode-toggle'
 
 const HeaderTab = () => {
-  const { setIsFollwing } = useTabType()
+  const { setIsSubscribing } = useTabType()
 
   const [activeIndex, setActiveIndex] = useState<number>(0)
 
   const onClick = (index: number) => {
     setActiveIndex(index)
-    setIsFollwing(index === 1)
+    setIsSubscribing(index === 1)
   }
 
   return (
-    <div className="flex h-14 border-b">
+    <div className="fixed top-0 left-1/3 flex w-1/3 h-14 border bg-background z-20">
       {headerItems.map((item, index) => (
         <div
           key={item.label}

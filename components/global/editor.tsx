@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import { CldImage  } from 'next-cloudinary'
+import { PostType } from '@prisma/client'
 import {
   CirclePlay,
   FileVideo,
@@ -13,12 +14,13 @@ import {
 } from 'lucide-react'
 
 import { createPost } from '@/actions/posts'
-import { useCurrentUser } from '@/hooks/use-current-user'
 import { createComment } from '@/actions/comment'
-import Loader from '@/components/global/loader'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
+import { useCurrentUser } from '@/hooks/use-current-user'
 import MediaUploader from '@/components/global/media-uploader'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
+import PostButton from './post-button'
+
 
 type Props = {
   postId?: string
@@ -40,21 +42,37 @@ const Editor = ({
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [showControls, setShowControls] = useState<boolean>(false)
   
-  const onPost = () => {
+  const onPost = (type: PostType) => {
     if (!currentUser || !currentUser.id || !value) return
     setIsLoading(true)
 
-    createPost(currentUser.id, value, image?.publicId, video?.secureURL)
+    createPost(currentUser.id, value, type, image?.publicId, video?.secureURL)
       .then(() => {
-        toast.success('Post created')
         setValue('')
         setImage(undefined)
         setVideo(undefined)
+        toast.success('Post created')
         router.refresh()
       })
       .catch(() => toast.error('Something went wrong'))
       .finally(() => setIsLoading(false))
   }
+
+  // const onPost = () => {
+  //   if (!currentUser || !currentUser.id || !value) return
+  //   setIsLoading(true)
+
+  //   createPost(currentUser.id, value, image?.publicId, video?.secureURL)
+  //     .then(() => {
+  //       toast.success('Post created')
+  //       setValue('')
+  //       setImage(undefined)
+  //       setVideo(undefined)
+  //       router.refresh()
+  //     })
+  //     .catch(() => toast.error('Something went wrong'))
+  //     .finally(() => setIsLoading(false))
+  // }
 
   const onComment = () => {
     if (!value) return toast.error('Content is required')
@@ -155,13 +173,19 @@ const Editor = ({
           <Smile className="w-5 h-5 text-sky-500 cursor-pointer hover:scale-110" />
         </div>
 
-        <Button
+        <PostButton
+          isEmpty={!value}
+          isLoading={isLoading}
+          onSubmit={onPost}
+        />
+
+        {/* <Button
           onClick={isComment ? onComment : onPost}
           disabled={isLoading || !value}
           className="rounded-full bg-sky-500 text-white hover:bg-sky-500 hover:bg-opacity-80"
         >
           {isLoading ? <Loader /> : 'Post'}
-        </Button>
+        </Button> */}
       </div>
     </div>
   )

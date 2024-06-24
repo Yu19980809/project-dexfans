@@ -1,6 +1,6 @@
+import type { NextAuthConfig } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import Google from 'next-auth/providers/google'
-import type { NextAuthConfig } from 'next-auth'
 import bcrypt from 'bcryptjs'
 
 import { LoginSchema } from '@/lib/schemas'

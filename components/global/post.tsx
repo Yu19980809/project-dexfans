@@ -12,7 +12,7 @@ import {
   AiOutlineMessage
 } from 'react-icons/ai'
 
-import { cn, formatName } from '@/lib/utils'
+import { canView, cn, formatName } from '@/lib/utils'
 import { PostWithAllInfo, PostWithInfo } from '@/lib/types'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import { likePost, unlikePost } from '@/actions/posts'
@@ -27,23 +27,22 @@ const Post = ({ data }: Props) => {
   const router = useRouter()
   const currentUser = useCurrentUser()
   const likeStatus = data.likedIds.includes(currentUser?.id!)
-  // @ts-ignore
-  const viewStatus = currentUser?.followingIds.includes(data.creatorId) || currentUser?.id === data.creatorId
 
-  const [canView, setCanView] = useState<boolean>(viewStatus)
+  const [isCanView, setIsCanView] = useState<boolean>(false)
   const [isLiked, setIsLiked] = useState<boolean>(likeStatus)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isAutoPlay, setIsAutoPlay] = useState<boolean>(false)
   const [showControls, setShowControls] = useState<boolean>(false)
 
-  // useEffect(() => {
-  //   const isLiked = data.likedIds.includes(currentUser?.id!)
-  //   setIsLiked(isLiked)
+  useEffect(() => {
+    if (!data) return
 
-  //   // @ts-ignore
-  //   const canView = currentUser?.followingIds.includes(data.creatorId) || currentUser?.id === data.creatorId
-  //   setCanView(canView)
-  // }, [currentUser?.id!, data.id])
+    // @ts-ignore
+    canView(data.type, data.creatorId, currentUser)
+      .then(res => {
+        console.log('res', res)
+      })
+  }, [data])
 
   const onLike = (e: any) => {
     e.stopPropagation()

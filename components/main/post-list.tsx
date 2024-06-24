@@ -14,7 +14,7 @@ type Props = {
 }
 
 const PostList = ({ posts }: Props) => {
-  const { isFollowing } = useTabType()
+  const { isSubscribing } = useTabType()
   const currentUser = useCurrentUser()
 
   const [data, setData] = useState<PostWithInfo[]>([])
@@ -22,7 +22,7 @@ const PostList = ({ posts }: Props) => {
 
   useEffect(() => {
     if (!currentUser?.id) return
-    if (!isFollowing) {
+    if (!isSubscribing) {
       setIsLoading(false)
       setData(posts)
       return
@@ -30,13 +30,13 @@ const PostList = ({ posts }: Props) => {
 
     const handleFn = async () => {
       const userInfo = await fetchUserInfo(currentUser?.id!)
-      const temp = posts.filter(item => userInfo.followingIds.includes(item.creatorId))
+      const temp = posts.filter(item => userInfo.subscribingIds.includes(item.creatorId))
       setIsLoading(false)
       setData(temp)
     }
 
     handleFn()
-  }, [posts, isFollowing, currentUser?.id])
+  }, [posts, isSubscribing, currentUser?.id])
 
   return (
     <>

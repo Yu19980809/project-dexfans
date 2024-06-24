@@ -1,3 +1,4 @@
+import { PostType } from '@prisma/client'
 import {
   Award,
   Bell,
@@ -5,6 +6,8 @@ import {
   Settings,
   User
 } from 'lucide-react'
+
+export const DAY_IN_MS = 86_400_000
 
 export const SidebarLinks = [
   {
@@ -42,7 +45,7 @@ export const headerItems = [
     label: 'For you'
   },
   {
-    label: 'Following'
+    label: 'Subscribing'
   }
 ]
 
@@ -84,5 +87,24 @@ export const premiumType = [
       'Super powers',
       'Blind box'
     ]
+  }
+]
+
+export const postOptions = [
+  {
+    label: 'Post as free',
+    value: PostType.FREE
+  },
+  {
+    label: 'Post as silver',
+    value: PostType.SILVER
+  },
+  {
+    label: 'Post as gold',
+    value: PostType.GOLD
+  },
+  {
+    label: 'Post as platinum',
+    value: PostType.PLATINUM
   }
 ]

@@ -45,7 +45,7 @@ export const {
           username: token.username,
           email: token.email,
           avatar: token.avatar,
-          followingIds: token.followingIds,
+          subscribingIds: token.subscribingIds,
           isOAuth: token.isOAuth
         }
 
@@ -60,15 +60,16 @@ export const {
 
       const existingUser = await getUserById(token.sub)
       if (!existingUser) return token
-
+      
+      // const lastedPurchase = await getUserLatestedPurchase(existingUser.id)
       const existingAccount = await getAccountByUserId(existingUser.id)
-      const { name, username, email, avatar, followingIds } = existingUser
+      const { name, username, email, avatar, subscribingIds } = existingUser
 
       token.name = name
       token.email = email
       token.avatar = avatar
       token.username = username
-      token.followingIds = followingIds
+      token.subscribingIds = subscribingIds
       token.isOAuth = !!existingAccount
 
       return token
