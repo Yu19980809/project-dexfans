@@ -14,10 +14,11 @@ import { Button } from '@/components/ui/button'
 import Loader from '@/components/global/loader'
 
 type Props = {
+  showAll?: boolean
   users: User[]
 }
 
-const Subscribe = ({ users }: Props) => {
+const Subscribe = ({ showAll = false, users }: Props) => {
   const router = useRouter()
   const currentUser = useCurrentUser()
 
@@ -25,7 +26,9 @@ const Subscribe = ({ users }: Props) => {
   const [isSubscribed, setIsSubscribed] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  users = users.filter(item => item.id !== currentUser?.id).slice(0, 3)
+  if (!showAll) {
+    users = users.filter(item => item.id !== currentUser?.id).slice(0, 3)
+  }
 
   useEffect(() => {
     // @ts-ignore
@@ -91,12 +94,11 @@ const Subscribe = ({ users }: Props) => {
         </div>
       ))}
 
-      <Link
-        href="/follow"
-        className="text-sm text-sky-500"
-      >
-        Check all
-      </Link>
+      {!showAll && (
+        <Link href="/subscribe" className="text-sm text-sky-500">
+          Check all
+        </Link>
+      )}
     </div>
   )
 }

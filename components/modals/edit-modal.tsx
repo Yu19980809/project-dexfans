@@ -28,6 +28,9 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form'
+import MediaUploader from '../global/media-uploader'
+import { CldImage } from 'next-cloudinary'
+import Image from 'next/image'
 
 type Props = {
   open: boolean
@@ -55,21 +58,22 @@ const EditModal = ({
     }
   })
 
-  const onSubmit = (values: z.infer<typeof UpdateUserSchema>) => {
-    setIsLoading(true)
-    
-    updateUserInfo(user?.id!, values)
-      .then(() => router.refresh())
-      .catch(() => toast.error('Failed to update profile'))
-      .then(() => {
-        setIsLoading(false)
-        setOpen(false)
-      })
+  const onSubmit = async (values: z.infer<typeof UpdateUserSchema>) => {
+    console.log('submit', values)
+    // setIsLoading(true)
+
+    // updateUserInfo(user?.id!, values)
+    //   .then(() => router.refresh())
+    //   .catch(() => toast.error('Failed to update profile'))
+    //   .then(() => {
+    //     setIsLoading(false)
+    //     setOpen(false)
+    //   })
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
+    <Dialog modal={false} open={open} onOpenChange={setOpen}>
+      <DialogContent onInteractOutside={e => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>Edit your profile</DialogTitle>
         </DialogHeader>
@@ -148,17 +152,21 @@ const EditModal = ({
                     <FormLabel className="text-muted-foreground">Profile Image</FormLabel>
 
                     <FormControl>
-                      <ImageUpload
+                      {/* <ImageUpload
                         label="Upload profile image"
                         onChange={(base64: any) => form.setValue('profileImage', base64)}
-                      />
+                      /> */}
 
-                      {/* <MediaUploader onUploadSuccess={result => field.onChange(result?.public_id)}>
-                        <div className="w-full p-4 rounded-md border-2 border-dotted text-center">
+                      <MediaUploader onUploadSuccess={result => {
+                        console.log('result', result)
+                        // field.onChange(result?.secure_url)
+                        form.setValue('profileImage', result?.secure_url)
+                      }}>
+                        <div className="w-full p-4 rounded-md border-2 border-dotted text-center cursor-pointer">
                           {!field.value && <p>Upload profile image</p>}
 
                           {!!field.value && (
-                            <CldImage
+                            <Image
                               src={field.value}
                               alt="Profile image"
                               width={200}
@@ -167,7 +175,7 @@ const EditModal = ({
                             />
                           )}
                         </div>
-                      </MediaUploader> */}
+                      </MediaUploader>
                     </FormControl>
 
                     <FormMessage />
@@ -185,7 +193,7 @@ const EditModal = ({
                     <FormControl>
                       <ImageUpload
                         label="Upload cover image"
-                        onChange={(base64: any) => form.setValue('coverImage', base64)}
+                        onChange={(base64: any) => field.onChange(base64)}
                       />
                     </FormControl>
 

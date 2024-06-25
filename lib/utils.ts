@@ -19,21 +19,19 @@ export const formatName = (name: string | null) => {
 }
 
 export const canView = async (postType: PostType, creatorId: string, user?: User) => {
-  if (user?.id === creatorId) return true
-  if (postType === PostType.FREE && user?.subscribingIds?.includes(creatorId)) return true
+  if (user?.id === creatorId || postType === PostType.FREE) return true
+  // if (postType === PostType.FREE && user?.subscribingIds?.includes(creatorId)) return true
   
-  const temp = await getUserLatestedPurchase(user?.id!)
-  console.log('temp', temp)
-  // const { premium, stripePriceId, stripeCurrentPeriodEnd } = await getUserLatestedPurchase(user?.id!)
-  // const isValid = stripePriceId && stripeCurrentPeriodEnd?.getTime()! + DAY_IN_MS > Date.now()
-  // if (!isValid) return false
+  const { premium, stripePriceId, stripeCurrentPeriodEnd } = await getUserLatestedPurchase(user?.id!)
+  const isValid = stripePriceId && stripeCurrentPeriodEnd?.getTime()! + DAY_IN_MS > Date.now()
+  if (!isValid) return false
 
-  // switch (postType) {
-  //   case PostType.SILVER:
-  //     return premium !== PremiumType.FREE
-  //   case PostType.GOLD:
-  //     return premium !== PremiumType.FREE && premium !== PremiumType.SILVER
-  //   case PostType.PLATINUM:
-  //     return premium === PremiumType.PLATINUM
-  // }
+  switch (postType) {
+    case PostType.SILVER:
+      return premium !== PremiumType.FREE
+    case PostType.GOLD:
+      return premium !== PremiumType.FREE && premium !== PremiumType.SILVER
+    case PostType.PLATINUM:
+      return premium === PremiumType.PLATINUM
+  }
 }

@@ -4,27 +4,33 @@ import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 
 type Props = {
+  label: string
   userId: string
   className?: string
 }
 
-const Mask = ({ userId, className }: Props) => {
+const Mask = ({ label, userId, className }: Props) => {
   const router = useRouter()
 
-  const onClick = (e: any) => {
+  // const onClick = (e: any) => {
+  //   e.stopPropagation()
+  //   router.push(`/users/${userId}`)
+  // }
+
+  const onNavigatePurchase = (e: any) => {
     e.stopPropagation()
-    router.push(`/users/${userId}`)
+    router.push('/premium')
   }
 
   return (
     <div
-      onClick={onClick}
+      // onClick={onClick}
       className={cn(
-        'absolute inset-0 flex justify-center items-center w-full h-full rounded-md bg-secondary z-10',
+        'absolute inset-0 flex justify-center items-center w-full h-full rounded-md bg-white/20 backdrop-blur-2xl z-10',
         className
       )}
     >
-      <span>Follow creator to view</span>
+      <span onClick={onNavigatePurchase} className="hover:underline">{label}</span>
     </div>
   )
 }

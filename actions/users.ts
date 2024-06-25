@@ -132,7 +132,6 @@ export const unfollow = async (userId: string, currentUserId: string) => {
 }
 
 export const purchase = async (userId: string, premium: Premium) => {
-  console.log('premium', premium)
   const existingPurchase = await db.purchase.findUnique({
     where: { userId }
   })
@@ -173,12 +172,10 @@ export const purchase = async (userId: string, premium: Premium) => {
       }
     ],
     metadata: {
-      premium: premium.value,
       userId,
-    }
+      premium: premium.label
+    },
   })
-
-  console.log('stripeSession', stripeSession)
 
   return { success: true, data: stripeSession.url }
 }

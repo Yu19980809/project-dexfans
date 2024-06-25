@@ -18,6 +18,7 @@ import { useCurrentUser } from '@/hooks/use-current-user'
 import { likePost, unlikePost } from '@/actions/posts'
 import AvatarItem from '@/components/global/avatar'
 import Mask from '@/components/global/mask'
+import { PostType } from '@prisma/client'
 
 type Props = {
   data: PostWithInfo | PostWithAllInfo
@@ -39,10 +40,8 @@ const Post = ({ data }: Props) => {
 
     // @ts-ignore
     canView(data.type, data.creatorId, currentUser)
-      .then(res => {
-        console.log('res', res)
-      })
-  }, [data])
+      .then(res => setIsCanView(res || false))
+  }, [data, currentUser])
 
   const onLike = (e: any) => {
     e.stopPropagation()
@@ -130,7 +129,7 @@ const Post = ({ data }: Props) => {
                     className="w-full rounded-md object-cover"
                   />
 
-                  {!canView && <Mask userId={data.creatorId} />}
+                  {!isCanView && <Mask label={`Purchase ${data.type} premium to view`} userId={data.creatorId} />}
                 </div>
               )}
 
@@ -150,7 +149,7 @@ const Post = ({ data }: Props) => {
                     <CirclePlay className="w-10 h-10 text-white opacity-70" />
                   </div>
 
-                  {!canView && <Mask userId={data.creatorId} />}
+                  {!isCanView && <Mask label={`Purchase ${data.type} premium to view`} userId={data.creatorId} />}
                 </div>
               )}
             </div>

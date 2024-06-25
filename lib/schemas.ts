@@ -46,10 +46,6 @@ export const UpdateUserSchema = object({
   bio: optional(
     string().min(1, 'Bio is required')
   ),
-  profileImage: optional(
-    string().min(1, 'Profle image is required')
-  ),
-  coverImage: optional(
-    string().min(1, 'Cover image is required')
-  )
+  profileImage: optional(string()),
+  coverImage: optional(string())
 })
