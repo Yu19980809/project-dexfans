@@ -17,11 +17,14 @@ type Props = {
 const UserHero = ({ user }: Props) => {
   return (
     <div className="relative h-[180px]">
-      <Image
-        src={user.coverImage || cover}
-        alt="Cover Image"
-        className="w-full h-full object-cover"
-      />
+      <div className="w-full h-full">
+        <Image
+          src={user?.avatar || cover}
+          alt="Default Cover Image"
+          fill
+          className="object-cover"
+        />
+      </div>
 
       <Avatar className="absolute left-4 -bottom-16 w-32 h-32 rounded-full border-4 border-background">
         <AvatarImage src={user.avatar!} />

@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { CldImage } from 'next-cloudinary'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { z } from 'zod'
@@ -10,8 +11,8 @@ import { UpdateUserSchema } from '@/lib/schemas'
 import { UserWithInfo } from '@/lib/types'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import MediaUploader from '@/components/global/media-uploader'
 import Loader from '@/components/global/loader'
-import ImageUpload from '@/components/global/image-upload'
 import {
   Dialog,
   DialogClose,
@@ -28,9 +29,6 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form'
-import MediaUploader from '../global/media-uploader'
-import { CldImage } from 'next-cloudinary'
-import Image from 'next/image'
 
 type Props = {
   open: boolean
@@ -59,16 +57,15 @@ const EditModal = ({
   })
 
   const onSubmit = async (values: z.infer<typeof UpdateUserSchema>) => {
-    console.log('submit', values)
-    // setIsLoading(true)
+    setIsLoading(true)
 
-    // updateUserInfo(user?.id!, values)
-    //   .then(() => router.refresh())
-    //   .catch(() => toast.error('Failed to update profile'))
-    //   .then(() => {
-    //     setIsLoading(false)
-    //     setOpen(false)
-    //   })
+    updateUserInfo(user?.id!, values)
+      .then(() => router.refresh())
+      .catch(() => toast.error('Failed to update profile'))
+      .then(() => {
+        setIsLoading(false)
+        setOpen(false)
+      })
   }
 
   return (
@@ -152,26 +149,17 @@ const EditModal = ({
                     <FormLabel className="text-muted-foreground">Profile Image</FormLabel>
 
                     <FormControl>
-                      {/* <ImageUpload
-                        label="Upload profile image"
-                        onChange={(base64: any) => form.setValue('profileImage', base64)}
-                      /> */}
-
-                      <MediaUploader onUploadSuccess={result => {
-                        console.log('result', result)
-                        // field.onChange(result?.secure_url)
-                        form.setValue('profileImage', result?.secure_url)
-                      }}>
-                        <div className="w-full p-4 rounded-md border-2 border-dotted text-center cursor-pointer">
+                      <MediaUploader onUploadSuccess={result => field.onChange(result.info.secure_url)}>
+                        <div className="flex justify-center items-center w-full p-4 rounded-md border-2 border-dotted cursor-pointer">
                           {!field.value && <p>Upload profile image</p>}
 
                           {!!field.value && (
-                            <Image
+                            <CldImage
                               src={field.value}
                               alt="Profile image"
-                              width={200}
-                              height={200}
-                              className="w-full rounded-md object-cover"
+                              width={100}
+                              height={100}
+                              className="rounded-md"
                             />
                           )}
                         </div>
@@ -191,10 +179,21 @@ const EditModal = ({
                     <FormLabel className="text-muted-foreground">Cover Image</FormLabel>
 
                     <FormControl>
-                      <ImageUpload
-                        label="Upload cover image"
-                        onChange={(base64: any) => field.onChange(base64)}
-                      />
+                      <MediaUploader onUploadSuccess={result => field.onChange(result.info.secure_url)}>
+                        <div className="flex justify-center items-center w-full p-4 rounded-md border-2 border-dotted cursor-pointer">
+                          {!field.value && <p>Upload cover image</p>}
+
+                          {!!field.value && (
+                            <CldImage
+                              src={field.value}
+                              alt="Cover image"
+                              width={200}
+                              height={200}
+                              className="rounded-md"
+                            />
+                          )}
+                        </div>
+                      </MediaUploader>
                     </FormControl>
 
                     <FormMessage />

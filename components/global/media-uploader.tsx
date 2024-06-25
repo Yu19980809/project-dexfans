@@ -5,7 +5,7 @@ import { CldUploadWidget } from 'next-cloudinary'
 
 type Props = {
   isVideo?: boolean
-  children: React.ReactNode
+  children?: React.ReactNode
   onUploadSuccess: (result: any) => void
 }
 

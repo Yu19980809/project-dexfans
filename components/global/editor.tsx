@@ -58,22 +58,6 @@ const Editor = ({
       .finally(() => setIsLoading(false))
   }
 
-  // const onPost = () => {
-  //   if (!currentUser || !currentUser.id || !value) return
-  //   setIsLoading(true)
-
-  //   createPost(currentUser.id, value, image?.publicId, video?.secureURL)
-  //     .then(() => {
-  //       toast.success('Post created')
-  //       setValue('')
-  //       setImage(undefined)
-  //       setVideo(undefined)
-  //       router.refresh()
-  //     })
-  //     .catch(() => toast.error('Something went wrong'))
-  //     .finally(() => setIsLoading(false))
-  // }
-
   const onComment = () => {
     if (!value) return toast.error('Content is required')
     setIsLoading(true)
@@ -178,14 +162,6 @@ const Editor = ({
           isLoading={isLoading}
           onSubmit={onPost}
         />
-
-        {/* <Button
-          onClick={isComment ? onComment : onPost}
-          disabled={isLoading || !value}
-          className="rounded-full bg-sky-500 text-white hover:bg-sky-500 hover:bg-opacity-80"
-        >
-          {isLoading ? <Loader /> : 'Post'}
-        </Button> */}
       </div>
     </div>
   )

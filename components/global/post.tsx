@@ -19,6 +19,8 @@ import { likePost, unlikePost } from '@/actions/posts'
 import AvatarItem from '@/components/global/avatar'
 import Mask from '@/components/global/mask'
 import { PostType } from '@prisma/client'
+import { getUserLatestedPurchase } from '@/actions/users'
+import { DAY_IN_MS } from '@/lib/constants'
 
 type Props = {
   data: PostWithInfo | PostWithAllInfo
