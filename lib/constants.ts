@@ -1,4 +1,4 @@
-import { PostType } from '@prisma/client'
+import { PostType, PremiumType } from '@prisma/client'
 import {
   Award,
   Bell,
@@ -57,6 +57,7 @@ export const premiumTab = [
 export const premiumType = [
   {
     label: 'SILVER',
+    value: PremiumType.SILVER,
     // annualAmount: '14.99',
     price: 19.99,
     items: [
@@ -67,6 +68,7 @@ export const premiumType = [
   },
   {
     label: 'GOLD',
+    value: PremiumType.GOLD,
     // annualAmount: '22.99',
     price: 29.99,
     items: [
@@ -78,6 +80,7 @@ export const premiumType = [
   },
   {
     label: 'PLATINUM',
+    value: PremiumType.PLATINUM,
     // annualAmount: '40.99',
     price: 49.99,
     items: [
