@@ -1,5 +1,11 @@
 import { Comment, Post, PremiumType, User } from '@prisma/client'
 
+export enum PostListType {
+  FOR_YOU,
+  SUBSCRIBING,
+  USER_PROFILE
+}
+
 export type Premium = {
   label: string
   value: PremiumType
@@ -7,13 +13,20 @@ export type Premium = {
   items: string[]
 }
 
+export type PartialUser = {
+  id: string
+  name: string | null
+  username: string | null
+  avatar: string | null
+}
+
 export type PostWithInfo = Post & {
-  creator: User
+  creator: PartialUser
   comments: Comment[]
 }
 
 export type PostWithAllInfo = Post & {
-  creator: User
+  creator: PartialUser
   comments: CommentWithInfo[]
 }
 

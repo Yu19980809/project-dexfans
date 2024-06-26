@@ -18,9 +18,6 @@ import { useCurrentUser } from '@/hooks/use-current-user'
 import { likePost, unlikePost } from '@/actions/posts'
 import AvatarItem from '@/components/global/avatar'
 import Mask from '@/components/global/mask'
-import { PostType } from '@prisma/client'
-import { getUserLatestedPurchase } from '@/actions/users'
-import { DAY_IN_MS } from '@/lib/constants'
 
 type Props = {
   data: PostWithInfo | PostWithAllInfo
@@ -29,7 +26,7 @@ type Props = {
 const Post = ({ data }: Props) => {
   const router = useRouter()
   const currentUser = useCurrentUser()
-  const likeStatus = data.likedIds.includes(currentUser?.id!)
+  const likeStatus = data.likedIds.includes(currentUser?.id!) || false
 
   const [isCanView, setIsCanView] = useState<boolean>(false)
   const [isLiked, setIsLiked] = useState<boolean>(likeStatus)

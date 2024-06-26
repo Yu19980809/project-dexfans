@@ -19,8 +19,8 @@ const UserHero = ({ user }: Props) => {
     <div className="relative h-[180px]">
       <div className="w-full h-full">
         <Image
-          src={user?.avatar || cover}
-          alt="Default Cover Image"
+          src={user?.coverImage || cover}
+          alt="Cover Image"
           fill
           className="object-cover"
         />

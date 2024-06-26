@@ -1,11 +1,12 @@
 import NextAuth from 'next-auth'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 
-import db from '@/lib/db'
+import db, { PremiumType } from '@/lib/db'
+import { DAY_IN_MS } from '@/lib/constants'
+import { getAccountByUserId } from '@/actions/tokens'
+import { getUserById, getUserLatestedPurchase } from '@/actions/users'
 
 import authConfig from '@/auth.config'
-import { getUserById } from '@/actions/users'
-import { getAccountByUserId } from '@/actions/tokens'
 
 export const {
   handlers: { GET, POST },
@@ -46,7 +47,8 @@ export const {
           email: token.email,
           avatar: token.avatar,
           subscribingIds: token.subscribingIds,
-          isOAuth: token.isOAuth
+          isOAuth: token.isOAuth,
+          premium: token.premium
         }
 
         // @ts-ignore
@@ -61,9 +63,17 @@ export const {
       const existingUser = await getUserById(token.sub)
       if (!existingUser) return token
       
-      // const lastedPurchase = await getUserLatestedPurchase(existingUser.id)
       const existingAccount = await getAccountByUserId(existingUser.id)
+      const lastedPurchase = await getUserLatestedPurchase(existingUser.id)
       const { name, username, email, avatar, subscribingIds } = existingUser
+
+      if (!lastedPurchase) {
+        token.premium = PremiumType.FREE
+      } else {
+        const { premium, stripePriceId, stripeCurrentPeriodEnd } = lastedPurchase
+        const isValid = stripePriceId && stripeCurrentPeriodEnd?.getTime()! + DAY_IN_MS > Date.now()
+        token.premium = !isValid ? PremiumType.FREE : premium
+      }
 
       token.name = name
       token.email = email

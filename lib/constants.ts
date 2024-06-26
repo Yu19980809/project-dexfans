@@ -4,10 +4,10 @@ import {
   Bell,
   Home,
   Settings,
-  User
 } from 'lucide-react'
 
 export const DAY_IN_MS = 86_400_000
+export const AMOUNT_PER_PAGE = 10
 
 export const SidebarLinks = [
   {
@@ -95,19 +95,23 @@ export const premiumType = [
 
 export const postOptions = [
   {
-    label: 'Post as free',
+    label: 'Post as free content',
     value: PostType.FREE
   },
   {
-    label: 'Post as silver',
+    label: 'Post as silver content',
     value: PostType.SILVER
   },
   {
-    label: 'Post as gold',
+    label: 'Post as gold content',
     value: PostType.GOLD
   },
   {
-    label: 'Post as platinum',
+    label: 'Post as platinum content',
     value: PostType.PLATINUM
-  }
+  },
+  // {
+  //   label: 'Post as paid content',
+  //   value: PostType.PAID
+  // }
 ]

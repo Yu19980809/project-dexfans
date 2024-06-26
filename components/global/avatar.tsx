@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { User } from '@prisma/client'
 
+import { PartialUser } from '@/lib/types'
 import {
   Avatar,
   AvatarFallback,
@@ -10,7 +11,7 @@ import {
 } from '@/components/ui/avatar'
 
 type Props = {
-  user: User
+  user: User | PartialUser
 }
 
 const AvatarItem = ({ user }: Props) => {

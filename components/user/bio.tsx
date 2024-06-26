@@ -48,7 +48,7 @@ const UserBio = ({ user }: Props) => {
           if (res.error) return toast.error(res.error)
           setIsSubscribed(false)
           router.refresh()
-          toast.success('Unfollow success')
+          toast.success('Unsubscribe success')
         })
         .catch(() => toast.error('Something went wrong'))
         .finally(() => setIsLoading(false))
@@ -58,7 +58,7 @@ const UserBio = ({ user }: Props) => {
         if (res.error) return toast.error(res.error)
         setIsSubscribed(true)
         router.refresh()
-        toast.success('Follow success')
+        toast.success('Subscribe success')
       })
       .catch(() => toast.error('Something went wrong'))
       .finally(() => setIsLoading(false))
@@ -102,7 +102,7 @@ const UserBio = ({ user }: Props) => {
             </p>
           </div>
 
-          <div className="flex flex-col gap-y-2">
+          <div className="flex flex-col gap-y-4">
             <p>{user.bio}</p>
 
             <div className="flex items-center gap-x-2  text-muted-foreground">

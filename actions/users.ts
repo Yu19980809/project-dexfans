@@ -31,6 +31,15 @@ export const fetchAllUsers = async () => {
   return users
 }
 
+export const fetchFirst5Users = async () => {
+  const users = await db.user.findMany({
+    take: 5,
+    orderBy: { createdAt: 'desc' },
+  })
+
+  return users
+}
+
 export const fetchUserInfo = async (userId: string) => {
   if (!userId) throw new Error('Missing user id')
 

@@ -1,9 +1,6 @@
-import { PostType, PremiumType, User } from '@prisma/client'
+import { PostType, PremiumType } from '@prisma/client'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-
-import { getUserLatestedPurchase } from '@/actions/users'
-import { DAY_IN_MS } from '@/lib/constants'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -18,20 +15,16 @@ export const formatName = (name: string | null) => {
   return `@${temp.join('_')}`
 }
 
-export const canView = async (postType: PostType, creatorId: string, user?: User) => {
+export const canView = async (postType: PostType, creatorId: string, user?: any) => {
   if (user?.id === creatorId || postType === PostType.FREE) return true
   // if (postType === PostType.FREE && user?.subscribingIds?.includes(creatorId)) return true
   
-  const { premium, stripePriceId, stripeCurrentPeriodEnd } = await getUserLatestedPurchase(user?.id!)
-  const isValid = stripePriceId && stripeCurrentPeriodEnd?.getTime()! + DAY_IN_MS > Date.now()
-  if (!isValid) return false
-
   switch (postType) {
     case PostType.SILVER:
-      return premium !== PremiumType.FREE
+      return user?.premium !== PremiumType.FREE
     case PostType.GOLD:
-      return premium !== PremiumType.FREE && premium !== PremiumType.SILVER
+      return user?.premium !== PremiumType.FREE && user?.premium !== PremiumType.SILVER
     case PostType.PLATINUM:
-      return premium === PremiumType.PLATINUM
+      return user?.premium === PremiumType.PLATINUM
   }
 }

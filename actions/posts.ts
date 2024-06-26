@@ -47,21 +47,85 @@ export const fetchAllPosts = async () => {
   return posts
 }
 
-export const fetchUserPosts = async (userId: string) => {
+export const fetchPosts = async (offset: number, limit: number) => {
+  const posts = await db.post.findMany({
+    skip: offset,
+    take: limit,
+    orderBy: { createdAt: 'desc' },
+    include: {
+      comments: true,
+      creator: {
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          avatar: true
+        }
+      },
+    }
+  })
+
+  return posts
+}
+
+export const fetchUserPosts = async (userId: string, offset: number, limit: number) => {
   if (!userId) throw new Error('Missing user id')
 
   const existingUser = await db.user.findUnique({
     where: { id: userId }
   })
 
-  if (!existingUser) throw new Error('nvalid user id')
+  if (!existingUser) throw new Error('Invalid user id')
 
   const posts = await db.post.findMany({
+    skip: offset,
+    take: limit,
     orderBy: { createdAt: 'desc' },
     where: { creatorId: userId },
     include: {
-      creator: true,
-      comments: true
+      comments: true,
+      creator: {
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          avatar: true
+        }
+      }
+    }
+  })
+
+  return posts
+}
+
+export const fetchSubscribingUserPosts = async (userId: string, offset: number, limit: number) => {
+  if (!userId) throw new Error('Missing user id')
+
+  const existingUser = await db.user.findUnique({
+    where: { id: userId }
+  })
+
+  if (!existingUser) throw new Error('Invalid user id')
+
+  const posts = await db.post.findMany({
+    skip: offset,
+    take: limit,
+    orderBy: { createdAt: 'desc' },
+    where: {
+      creatorId: {
+        in: existingUser.subscribingIds
+      }
+    },
+    include: {
+      comments: true,
+      creator: {
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          avatar: true
+        }
+      }
     }
   })
 

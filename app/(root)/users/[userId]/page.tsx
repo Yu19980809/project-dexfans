@@ -1,4 +1,4 @@
-import { UserWithInfo } from '@/lib/types'
+import { PostListType, UserWithInfo } from '@/lib/types'
 import { fetchUserInfo } from '@/actions/users'
 import { fetchUserPosts } from '@/actions/posts'
 import Loader from '@/components/global/loader'
@@ -7,6 +7,7 @@ import UserHero from '@/components/user/hero'
 import UserBio from '@/components/user/bio'
 import Post from '@/components/global/post'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import PostList from '@/components/main/post-list'
 
 type Props = {
   params: {
@@ -16,10 +17,9 @@ type Props = {
 
 const UserPage = async ({ params }: Props) => {
   const user: UserWithInfo = await fetchUserInfo(params.userId)
-  const posts = await fetchUserPosts(params.userId)
 
   return (
-    <>
+    <div className="min-h-screen border-x">
       {!user && (
         <div className="flex justify-center items-center h-full">
           <Loader className="w-12 h-12" />
@@ -33,11 +33,12 @@ const UserPage = async ({ params }: Props) => {
           <UserBio user={user} />
 
           <ScrollArea>
-            {posts.map(item => <Post key={item.id} data={item} />)}
+            {/* {posts.map(item => <Post key={item.id} data={item} />)} */}
+            <PostList type={PostListType.USER_PROFILE} userId={params.userId} />
           </ScrollArea>
         </div>
       )}
-    </>
+    </div>
   )
 }
 

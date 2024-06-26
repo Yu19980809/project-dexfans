@@ -12,6 +12,7 @@ enum PostType {
   SILVER
   GOLD
   PLATINUM
+  // PAID
 }
 
 enum PremiumType {
@@ -86,6 +87,34 @@ model Notification {
   updatedAt DateTime  @updatedAt
 }
 
+// model Conversation {
+//   id  String  @id @default(auto())  @map("_id") @db.ObjectId
+//   lastMessageAt  DateTime  @default(now())
+
+//   messageIds  String[]  @db.ObjectId
+//   messages  Message[]
+
+//   userIds String[]  @db.ObjectId
+//   users  User[]  @relation(fields: [userIds], references: [id])
+
+//   createAt  DateTime  @default(now())
+// }
+
+// model Message {
+//   id  String  @id @default(auto())  @map("_id") @db.ObjectId
+//   content  String?
+//   image String?
+//   isSeen  Boolean @default(false)
+
+//   conversationId  String  @db.ObjectId
+//   conversation  Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+//   senderId  String  @db.ObjectId
+//   sender  User  @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+//   createdAt  DateTime  @default(now())
+// }
+
 model Account {
   id  String  @id @default(auto())  @map("_id") @db.ObjectId
   type  String
@@ -129,3 +158,27 @@ model Purchase {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
+
+// model Bookmark {
+//   id  String  @id @default(auto())  @map("_id") @db.ObjectId
+  
+//   posts PostsOnBookmarks[]
+
+//   createdAt DateTime  @default(now())
+//   updatedAt DateTime  @updatedAt
+// }
+
+// model PostsOnBookmarks {
+//   id  String  @id @default(auto())  @map("_id") @db.ObjectId
+
+//   postId  String  @db.ObjectId
+//   post  Post  @relation(fields: [postId], references: [id])
+
+//   bookmarkId  String  @db.ObjectId
+//   bookmark  Bookmark  @relation(fields: [bookmarkId], references: [id])
+
+//   createdAt DateTime  @default(now())
+//   updatedAt DateTime  @updatedAt
+
+//   @@unique([postId, bookmarkId])
+// }

@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { User } from '@prisma/client'
 import { toast } from 'react-hot-toast'
 
-import { formatName } from '@/lib/utils'
+import { cn, formatName } from '@/lib/utils'
 import { follow, unfollow } from '@/actions/users'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import AvatarItem from '@/components/global/avatar'
@@ -25,10 +25,6 @@ const Subscribe = ({ showAll = false, users }: Props) => {
   const [data, setData] = useState<User[]>(users) 
   const [isSubscribed, setIsSubscribed] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
-
-  if (!showAll) {
-    users = users.filter(item => item.id !== currentUser?.id).slice(0, 3)
-  }
 
   useEffect(() => {
     // @ts-ignore
@@ -78,8 +74,13 @@ const Subscribe = ({ showAll = false, users }: Props) => {
             <AvatarItem user={item}/>
 
             <div className="flex flex-col">
-              <span className="font-semibold">{item.username}</span>
-              <span className="text-xs text-muted-foreground">{formatName(item.name)}</span>
+              <span className={cn('font-semibold truncate', showAll ? 'max-w-[400px]' : 'max-w-[100px]')}>
+                {item.username}
+              </span>
+
+              <span className="text-xs text-muted-foreground">
+                {formatName(item.name)}
+              </span>
             </div>
           </Link>
 

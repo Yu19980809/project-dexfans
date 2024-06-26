@@ -1,42 +1,72 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useInView } from 'react-intersection-observer'
+import { toast } from 'react-hot-toast'
 
+import { PostListType, PostWithInfo } from '@/lib/types'
+import { AMOUNT_PER_PAGE } from '@/lib/constants'
+import { fetchPosts, fetchSubscribingUserPosts, fetchUserPosts } from '@/actions/posts'
 import { useCurrentUser } from '@/hooks/use-current-user'
-import { fetchUserInfo } from '@/actions/users'
-import useTabType from '@/store/use-tab-type'
-import { PostWithInfo } from '@/lib/types'
-import Post from '@/components/global/post'
 import Loader from '@/components/global/loader'
+import Post from '@/components/global/post'
 
 type Props = {
-  posts: PostWithInfo[]
+  type: PostListType
+  userId?: string
 }
 
-const PostList = ({ posts }: Props) => {
-  const { isSubscribing } = useTabType()
+const PostList = ({ type, userId }: Props) => {
   const currentUser = useCurrentUser()
+  const { ref, inView } = useInView()
 
-  const [data, setData] = useState<PostWithInfo[]>([])
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [offset, setOffset] = useState<number>(AMOUNT_PER_PAGE)
+  const [posts, setPosts] = useState<PostWithInfo[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isOver, setIsOver] = useState<boolean>(false)
+
+  const fetchData = async (isLoadMore: boolean) => {
+    if (!isLoadMore) setIsLoading(true)
+    let data: any
+    const offsetCount = isLoadMore ? offset : 0
+
+    switch (type) {
+      case PostListType.FOR_YOU:
+        data = await fetchPosts(offsetCount, AMOUNT_PER_PAGE)
+        break
+      case PostListType.SUBSCRIBING:
+        data = await fetchSubscribingUserPosts(currentUser?.id!, offsetCount, AMOUNT_PER_PAGE)
+        break
+      case PostListType.USER_PROFILE:
+        data = await fetchUserPosts(userId!, offsetCount, AMOUNT_PER_PAGE)
+        break
+    }
+
+    if (!data) {
+      toast.error('Something went wrong')
+      if (!isLoadMore) setIsLoading(false)
+    } else {
+      if (data.length < AMOUNT_PER_PAGE) setIsOver(true)
+
+      if (isLoadMore) {
+        setPosts(prev => [...prev, ...data])
+        setOffset(prev => prev + AMOUNT_PER_PAGE)
+      } else {
+        setPosts(data)
+        setIsLoading(false)
+      }
+    }
+  }
 
   useEffect(() => {
-    if (!currentUser?.id) return
-    if (!isSubscribing) {
-      setIsLoading(false)
-      setData(posts)
-      return
-    }
+    fetchData(false)
+  }, [type])
 
-    const handleFn = async () => {
-      const userInfo = await fetchUserInfo(currentUser?.id!)
-      const temp = posts.filter(item => userInfo.subscribingIds.includes(item.creatorId))
-      setIsLoading(false)
-      setData(temp)
-    }
+  useEffect(() => {
+    if (!inView || isOver) return
 
-    handleFn()
-  }, [posts, isSubscribing, currentUser?.id])
+    fetchData(true)
+  }, [inView])
 
   return (
     <>
@@ -46,13 +76,21 @@ const PostList = ({ posts }: Props) => {
         </div>
       )}
 
-      {(!data || data.length === 0) && !isLoading && (
+      {(!posts || posts.length === 0) && !isLoading && (
         <div className="flex justify-center items-center h-[calc(100vh-56px)]">
           <span className="text-muted-foreground">No posts</span>
         </div>
       )}
 
-      {!!data && data.length !== 0 && !isLoading && data.map(item => <Post key={item.id} data={item} />)}
+      {!!posts && posts.length !== 0 && !isLoading && (
+        <div className="flex flex-col gap-y-2">
+          {posts.map(item => <Post key={item.id} data={item} />)}
+
+          <div ref={ref} className="flex justify-center items-center text-muted-foreground py-2">
+            {isOver ? 'No more posts' : <Loader className="w-4 h-4" />}
+          </div>
+        </div>
+      )}
     </>
   )
 }
